@@ -80,7 +80,7 @@ void Display(void)
 	float current_y = 390.0;
 	float next_x = current_x;
 	float next_y = current_y;
-	float angle = (3.14/2);
+	float angle = (3.14/2.0);
 	float direction = 0.0;
 	float line_size = 1.7;	
 
@@ -147,9 +147,7 @@ int main(int argc, char *argv[])
 	for (i=0; i<17; i++)
 	{
 		runIteration();
-	}	
-
-	//printf("\n%s\n", lsystem);
+	}
 	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB);
