@@ -1,15 +1,15 @@
 LSystems_OpenGL
 ===============
 
-L-System fractals programmed in C using OpenGL.\n\n
+L-System fractals programmed in C using OpenGL.<br><br>
 
-Install OpenGL.\n\n
+Install OpenGL.<br><br>
 
-To run:\n
-1. make\n
-2. cd bin\n
-3. ./lsystems (path to an l-system configuration file)\n
-    For example: ./lsystems ../grammars/dragon_curve.lst\n\n
+To run:<br>
+1. make<br>
+2. cd bin<br>
+3. ./lsystems (path to an l-system configuration file)<br>
+    For example: ./lsystems ../grammars/dragon_curve.lst<br><br>
     
 
 How to create a .lst file
