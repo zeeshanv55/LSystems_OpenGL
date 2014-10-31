@@ -3,7 +3,8 @@ LSystems_OpenGL
 
 L-System fractals programmed in C using OpenGL.<br><br>
 
-Install OpenGL.<br><br>
+Install OpenGL.<br>
+sudo apt-get install freeglut3-dev<br><br>
 
 To run:<br>
 1. make<br>
