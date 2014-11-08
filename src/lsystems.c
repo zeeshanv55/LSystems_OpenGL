@@ -31,8 +31,8 @@ float y_position_stack[1000000];
 int direction_stack_top = -1;
 int x_position_stack_top = -1;
 int y_position_stack_top = -1;
-GLint Width = 1920;
-GLint Height = 1080;
+GLint Width;
+GLint Height;
 
 float current_x;
 float current_y;
@@ -40,6 +40,11 @@ float next_x;
 float next_y;
 float angle;
 float direction;
+
+float max_x;
+float max_y;
+float min_x;
+float min_y;
 
 void read_lsystem_file(char*);
 void expand(int);
@@ -49,6 +54,8 @@ void reshape(GLint, GLint);
 void keyboard(unsigned char, int, int);
 void stack_push();
 void stack_pop();
+void calculateDrawingCoordinates();
+void simulateDrawing(float);
 
 
 void stack_push()
@@ -65,8 +72,130 @@ void stack_pop()
 	current_y = y_position_stack[y_position_stack_top--];
 }
 
+void simulateDrawing(float v_line_size)
+{
+	current_x = 0.0;
+	current_y = 0.0;
+	next_x = current_x;
+	next_y = current_y;
+	angle = change_angle;
+	direction = start_angle;
+	
+	max_x = 0.0;
+	max_y = 0.0;
+	min_x = 0.0;
+	min_y = 0.0;
+
+	int i, j;
+	for (i=0; lsystemString[i]!='\0'; i++)
+	{
+		for (j=0; j<drawSymbolCount; j++) {
+			if (lsystemString[i] == drawSymbol[j]) {
+				next_x = current_x + (v_line_size*cos(direction));
+				next_y = current_y + (v_line_size*sin(direction));
+
+				current_x = next_x;
+				current_y = next_y;
+
+				if (current_x > max_x) {
+					max_x = current_x;
+				}
+				
+				if (current_x < min_x) {
+					min_x = current_x;
+				}
+
+				if (current_y > max_y) {
+					max_y = current_y;
+				}
+
+				if (current_y < min_y) {
+					min_y = current_y;
+				}
+
+				break;
+			}
+		}
+
+		for (j=0; j<angleIncrementSymbolCount; j++) {
+			if (lsystemString[i] == angleIncrementSymbol[j]) {
+				direction += angle;
+				break;
+			}
+		}
+
+		for (j=0; j<angleDecrementSymbolCount; j++) {		
+			if (lsystemString[i] == angleDecrementSymbol[j]) {
+				direction -= angle;
+				break;
+			}
+		}
+
+		if (lsystemString[i] == stackPushSymbol) {
+			stack_push();
+		}
+
+		if (lsystemString[i] == stackPopSymbol) {
+			stack_pop();
+		}
+	}
+}
+
+void calculateDrawingCoordinates()
+{
+	float v_line_size = 1.0;
+	float figure_width;
+	float figure_height;
+	float x_offset;
+	float y_offset;
+
+	printf("%s", "Preparing to draw...");
+
+	Width = glutGet(GLUT_SCREEN_WIDTH);
+	Height = glutGet(GLUT_SCREEN_HEIGHT);
+	
+	simulateDrawing(v_line_size);
+	figure_width = max_x - min_x;
+	figure_height = max_y - min_y;
+
+	
+	if (figure_width > Width) {
+		do {
+			v_line_size -= 0.1;
+			simulateDrawing(v_line_size);
+			figure_width = max_x - min_x;
+			figure_height = max_y - min_y;
+		} while(figure_width > 0.85*Width);
+	}
+	else if (figure_width < 0.8*Width) {
+		do {
+			v_line_size += 0.1;
+			simulateDrawing(v_line_size);
+			figure_width = max_x - min_x;
+			figure_height = max_y - min_y;
+		} while(figure_width < 0.8*Width);
+	}
+
+	if (figure_height > 0.9*Height) {
+		do {
+			v_line_size -= 0.1;
+			simulateDrawing(v_line_size);
+			figure_height = max_y - min_y;
+			figure_width = max_x - min_x;
+		} while(figure_height > 0.85*Height);
+	}
+
+	line_size = v_line_size;
+	x_offset = ((Width-figure_width)/2.0)-min_x;
+	y_offset = (((Height*0.95)-figure_height)/2.0)-min_y;
+
+	start_x = x_offset;
+	start_y = y_offset;
+}
+
 void display(void)
 {
+	printf("\n%s\n", "Drawing fractal...");
 	current_x = start_x;
 	current_y = start_y;
 	next_x = current_x;
@@ -220,18 +349,6 @@ void read_lsystem_file(char filename[]) {
 				getline(&line, &len, file);
 				if (strcmp(line, "_end_config\n") == 0)
 					break;
-	
-				if (strcmp(line, "start_x\n") == 0) {
-					getline(&line, &len, file);
-					line[len-1] = '\0';
-					start_x = atof(line);
-				}
-
-				if (strcmp(line, "start_y\n") == 0) {
-					getline(&line, &len, file);
-					line[len-1] = '\0';
-					start_y = atof(line);
-				}
 
 				if (strcmp(line, "start_angle\n") == 0) {
 					getline(&line, &len, file);
@@ -243,12 +360,6 @@ void read_lsystem_file(char filename[]) {
 					getline(&line, &len, file);
 					line[len-1] = '\0';
 					change_angle = (3.14159/180.0)*atof(line);
-				}
-
-				if (strcmp(line, "line_size\n") == 0) {
-					getline(&line, &len, file);
-					line[len-1] = '\0';
-					line_size = atof(line);
 				}
 
 				if (strcmp(line, "iterations\n") == 0) {
@@ -288,8 +399,6 @@ void expand(int iterations) {
 	
 		lsystemString[lsystemIndex] = '\0';
 	}
-
-	printf("\n%s\n", "Drawing fractal...");
 }
 
 int production(char parent, int position) {
@@ -317,9 +426,12 @@ int production(char parent, int position) {
 int main(int argc, char *argv[])
 {	
 	read_lsystem_file(argv[1]);
+	iterations = atoi(argv[2]);	
 	expand(iterations);
-
 	glutInit(&argc, argv);
+
+	calculateDrawingCoordinates();
+
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
 	glutCreateWindow("L-System");
