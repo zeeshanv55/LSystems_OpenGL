@@ -1,6 +1,7 @@
 _begin_grammar
-S:F--F--F
-F:F+F--F+F
+S:FX+FX+
+X:X+YF
+Y:FX-Y
 _end_grammar
 
 _begin_symbol_meanings
@@ -16,5 +17,5 @@ _begin_config
 start_angle
 0.0
 change_angle
-60.0
+90.0
 _end_config

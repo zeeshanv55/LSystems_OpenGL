@@ -1,5 +1,5 @@
 _begin_grammar
-S:F--F--F
+S:F++F++F
 F:F+F--F+F
 _end_grammar
 
