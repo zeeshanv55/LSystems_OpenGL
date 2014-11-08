@@ -22,7 +22,7 @@ The file has three sections<br>
 
 Each section is detailed as follows:<br><br>
 
-1. Grammar section<br>
+<b>Grammar section</b><br>
 _begin_grammar <br>
 (grammar information)<br>
 _end_grammar<br>
@@ -34,7 +34,7 @@ A:p<br><br>
 
 where A is the non terminal and p is the production.<br><br>
 
-2. Symbol meanings section<br>
+<b>Symbol meanings section</b><br>
 _begin_symbol_meanings<br>
 (symbol meanings)<br>
 _end_symbol_meanings<br><br>
@@ -60,7 +60,7 @@ A<br>
 draw<br>
 B<br><br>
 
-3. Angle configurations section<br>
+<b>Angle configurations section</b><br>
 _begin_config<br>
 (configuration information)<br>
 _end_config<br><br>
