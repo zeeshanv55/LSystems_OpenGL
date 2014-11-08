@@ -17,16 +17,8 @@ stack_pop
 _end_symbol_meanings
 
 _begin_config
-start_x
-1100.0
-start_y
-40.0
 start_angle
 90.0
 change_angle
 25.0
-line_size
-0.7
-iterations
-9
 _end_config

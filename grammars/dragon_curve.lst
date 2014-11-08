@@ -14,16 +14,8 @@ decrease_angle
 _end_symbol_meanings
 
 _begin_config
-start_x
-700.0
-start_y
-370.0
 start_angle
 0.0
 change_angle
 90.0
-line_size
-1.7
-iterations
-18
 _end_config
